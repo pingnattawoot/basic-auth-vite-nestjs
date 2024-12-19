@@ -9,6 +9,7 @@ import { AuthResponse } from "../services/authService";
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isLoading: boolean;
   user: AuthResponse["user"] | null;
   token: string | null;
   login: (response: AuthResponse) => void;
@@ -25,6 +26,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthResponse["user"] | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check for saved auth state on mount
   useEffect(() => {
@@ -36,6 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(JSON.parse(savedUser));
       setIsAuthenticated(true);
     }
+    setIsLoading(false);
   }, []);
 
   const login = (response: AuthResponse) => {
@@ -56,7 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, token, login, logout }}
+      value={{ isAuthenticated, isLoading, user, token, login, logout }}
     >
       {children}
     </AuthContext.Provider>
