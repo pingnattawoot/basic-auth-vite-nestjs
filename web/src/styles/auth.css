@@ -52,6 +52,7 @@ button {
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
+  margin-top: 20px;
 }
 
 button:hover {
@@ -95,4 +96,4 @@ button:hover {
 
 .dashboard button {
   margin-top: 20px;
-} 
+}

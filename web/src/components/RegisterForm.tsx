@@ -1,30 +1,23 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authService } from '../services/authService'
 
 function RegisterForm() {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      await authService.register({ username, email, password })
-      navigate('/login')
-    } catch (err) {
-      console.log(err)
-      setError('Registration failed')
-    }
+    // This is just for demo purposes
+    console.log('Register attempt with:', { username, email, password })
+    navigate('/login')
   }
 
   return (
     <div className="auth-container">
       <div className="register-form">
         <h2>Register</h2>
-        {error && <div className="error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Username:</label>

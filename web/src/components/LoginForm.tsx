@@ -1,32 +1,22 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { authService } from '../services/authService'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
-  const { login } = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      const response = await authService.login({ email, password })
-      login(response.token)
-      navigate('/dashboard')
-    } catch (err) {
-      console.log(err)
-      setError('Invalid credentials')
-    }
-  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // This is just for demo purposes
+    console.log("Login attempt with:", { email, password });
+    navigate("/dashboard");
+  };
 
   return (
     <div className="auth-container">
       <div className="login-form">
         <h2>Login</h2>
-        {error && <div className="error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email:</label>
@@ -53,7 +43,7 @@ function LoginForm() {
         </p>
       </div>
     </div>
-  )
+  );
 }
 
-export default LoginForm 
+export default LoginForm;
