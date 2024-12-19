@@ -5,12 +5,21 @@ export interface LoginCredentials {
   password: string
 }
 
-export interface RegisterCredentials extends LoginCredentials {
-  username: string
+export interface RegisterCredentials {
+  email: string
+  password: string
+}
+
+export interface AuthResponse {
+  token: string
+  user: {
+    id: string
+    email: string
+  }
 }
 
 export const authService = {
-  async login(credentials: LoginCredentials) {
+  async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: {
@@ -26,7 +35,7 @@ export const authService = {
     return response.json()
   },
 
-  async register(credentials: RegisterCredentials) {
+  async register(credentials: RegisterCredentials): Promise<AuthResponse> {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: {
