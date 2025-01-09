@@ -23,8 +23,8 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile() {
-    return { message: 'This is a protected route' };
+  @Get('welcome')
+  async welcome() {
+    return { message: 'Welcome to the protected route' };
   }
 }

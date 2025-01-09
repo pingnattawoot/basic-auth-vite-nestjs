@@ -1,15 +1,18 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { users } from './mock/users.mock';
+import { UsersService } from 'src/features/users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UsersService,
+  ) {}
 
   async register(email: string, password: string) {
     // Check if user exists
-    const existingUser = users.find((user) => user.email === email);
+    const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
       throw new UnauthorizedException('User already exists');
     }
@@ -18,16 +21,12 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
-    const newUser = {
-      id: Date.now().toString(), // Simple ID generation
+    const newUser = await this.usersService.createNewUser({
       email,
       password: hashedPassword,
-    };
+    });
 
     console.log('newUser >>> ', newUser);
-
-    // Save to mock database
-    users.push(newUser);
 
     return {
       message: 'User registered successfully',
@@ -36,7 +35,7 @@ export class AuthService {
 
   async login(email: string, password: string) {
     // Find user
-    const user = users.find((user) => user.email === email);
+    const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
