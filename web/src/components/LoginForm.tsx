@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../services/authService";
 import { useAuth } from "../contexts/AuthContext";
+import { authService } from "../services/authService";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -20,6 +20,10 @@ function LoginForm() {
       console.error(err);
       setError("Invalid email or password");
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/api/auth/google/login";
   };
 
   return (
@@ -48,6 +52,7 @@ function LoginForm() {
           </div>
           <button type="submit">Login</button>
         </form>
+        <button onClick={handleGoogleLogin}>Login with Google</button>
         <p className="auth-link">
           Don't have an account? <a href="/register">Register</a>
         </p>

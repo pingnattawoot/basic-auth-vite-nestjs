@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
@@ -26,5 +35,19 @@ export class AuthController {
   @Get('welcome')
   async welcome() {
     return { message: 'Welcome to the protected route' };
+  }
+
+  @Get('google/login')
+  @UseGuards(GoogleAuthGuard)
+  async googleLogin() {
+    // Initiates Google OAuth2 login flow
+  }
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleCallback(@Req() req, @Res() res) {
+    const response = await this.authService.loginWithEmail(req.user.email);
+
+    res.redirect('http://localhost:5173?token=' + response.token);
   }
 }

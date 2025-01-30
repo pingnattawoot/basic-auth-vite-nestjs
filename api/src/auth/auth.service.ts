@@ -60,4 +60,39 @@ export class AuthService {
       },
     };
   }
+
+  async loginWithEmail(email: string) {
+    // Find user
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // Generate JWT
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+    });
+
+    return {
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    };
+  }
+
+  async validateGoogleUser(googleUser: any) {
+    // console.log('googleUser >>> ', googleUser);
+    const user = await this.usersService.findByEmail(googleUser.email);
+    if (user) return user;
+
+    console.log('user not found, creating new user');
+
+    return await this.usersService.createNewUser({
+      email: googleUser.email,
+      password: googleUser.password,
+    });
+  }
 }
